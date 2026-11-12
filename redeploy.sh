@@ -1,5 +1,7 @@
 #!/bin/bash
-docker build --tag mk8dx-sqbot .
-docker stop mk8dx-sqbot
-docker rm mk8dx-sqbot
-docker run -d --name mk8dx-sqbot --restart unless-stopped mk8dx-sqbot
+docker stop mkwii-mogi-queuebot
+docker rm mkwii-mogi-queuebot
+docker container prune
+docker build --tag mkwii-mogi-queuebot .
+docker image prune
+docker run -d --name mkwii-mogi-queuebot -v "$(pwd)/settings_data:/app/settings_data" --restart unless-stopped mkwii-mogi-queuebot
