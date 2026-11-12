@@ -899,7 +899,7 @@ class SquadQueue(commands.Cog):
 
             # maybe for mkworld if not 1 hour blocks for mogis
             if common.SERVER is common.Server.MKW or common.SERVER is common.Server.MKWorld:
-                msg += "**Daily Queue Times:**\n\n"
+                msg += "**Daily Queue Times:**\n"
 
                 curr_time = self.compute_next_event_open_time() + self.JOINING_TIME + \
                     self.DISPLAY_OFFSET_MINUTES
@@ -919,24 +919,24 @@ class SquadQueue(commands.Cog):
 
                 msg += "\n"
 
-            current_rotation = ', '.join(self.forced_format_order)
+            # current_rotation = ', '.join(self.forced_format_order)
 
-            msg += f"**Current Rotation** - {current_rotation or 'N/A'}\n"
+            # msg += f"**Current Rotation** - {current_rotation or 'N/A'}\n"
 
-            time_between_ff_queues = self.queues_between_forced_format_queue * self.QUEUE_OPEN_TIME
-            time_between_ff_queues_hours = time_between_ff_queues.total_seconds() / 3600
+            # time_between_ff_queues = self.queues_between_forced_format_queue * self.QUEUE_OPEN_TIME
+            # time_between_ff_queues_hours = time_between_ff_queues.total_seconds() / 3600
 
-            if not current_rotation:
-                msg += f"**Current Interval** - N/A\n\n"
-            elif time_between_ff_queues_hours.is_integer():
-                msg += f"**Current Interval** - {int(time_between_ff_queues_hours)} hours\n\n"
-            else:
-                time_between_ff_queues_minutes = time_between_ff_queues.total_seconds() / 60
-                msg += f"**Current Interval** - {int(time_between_ff_queues_minutes)} minutes\n\n"
+            # if not current_rotation:
+            #     msg += f"**Current Interval** - N/A\n\n"
+            # elif time_between_ff_queues_hours.is_integer():
+            #     msg += f"**Current Interval** - {int(time_between_ff_queues_hours)} hours\n\n"
+            # else:
+            #     time_between_ff_queues_minutes = time_between_ff_queues.total_seconds() / 60
+            #     msg += f"**Current Interval** - {int(time_between_ff_queues_minutes)} minutes\n\n"
 
-            msg += "**List of Mogis with Scheduled Formats:**\n\n"
-            for index, event in enumerate(self.forced_format_times):
-                msg += f"`#{index + 1}` **{event[1]}:** {discord.utils.format_dt(event[0])} - {discord.utils.format_dt(event[0], style='R')}\n"
+            # msg += "**List of Mogis with Scheduled Formats:**\n\n"
+            # for index, event in enumerate(self.forced_format_times):
+            #     msg += f"`#{index + 1}` **{event[1]}:** {discord.utils.format_dt(event[0])} - {discord.utils.format_dt(event[0], style='R')}\n"
             message = msg.split("\n")
 
             new_messages = []
