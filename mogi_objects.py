@@ -77,6 +77,7 @@ class Mogi:
             minutes=additional_extension_minutes)
         self.format = format
         self.has_checked_auto_extend = False
+        self.tag_ping_thresholds_sent = set()
         self.final_amount_good_rooms = 0
 
     @property
@@ -684,6 +685,7 @@ class VoteView(View):
         elif common.SERVER is common.Server.MKWorld:
             msg += f"\nTable: `/scoreboard`\n"
             msg += f"RandomBot Scoreboard: `/scoreboard {teams_per_room} {', '.join(scoreboard_text)}`\n"
+            msg += "Points tracking sheet: https://docs.google.com/spreadsheets/d/1NnHSPKfyGp2IiYtgLukIYt14GYQQCNtIR0AgTfxagDo/\n"
 
         penalty_time = self.mogi.making_rooms_run_time + \
             timedelta(minutes=self.penalty_time)

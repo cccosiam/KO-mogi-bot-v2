@@ -641,6 +641,7 @@ class SquadQueue(commands.Cog):
         players[0].host = host
         squad = Team(players)
         mogi.teams.append(squad)
+        await self.maybe_ping_tags(mogi)
         host_str = " as a host " if host else " "
         format_str = f"__**{mogi.format}**__ " if mogi.format else ""
         player_amount_str = f"{self.ongoing_event.players_per_room} player " if common.SERVER is common.Server.MKWorld else ""
@@ -655,6 +656,25 @@ class SquadQueue(commands.Cog):
         finally:
             if event_status_launched:
                 await self.launch_mogi()
+
+    async def maybe_ping_tags(self, mogi: Mogi):
+        thresholds = self.bot.config.get(
+            "QUEUE_TAG_PING_THRESHOLDS", [8, 16, 22])
+        players = mogi.num_players
+        for threshold in thresholds:
+            if players < threshold or threshold in mogi.tag_ping_thresholds_sent:
+                continue
+
+            mogi.tag_ping_thresholds_sent.add(threshold)
+            players_needed = mogi.players_per_room - (
+                players % mogi.players_per_room)
+            tags_role_id = self.bot.config["frequently_tagged_role_id"]
+            try:
+                await mogi.mogi_channel.send(
+                    f"<@&{tags_role_id}> +{players_needed}")
+            except discord.HTTPException:
+                mogi.tag_ping_thresholds_sent.remove(threshold)
+                print("Failed to send queue fill ping.", flush=True)
 
     @app_commands.command(name="staff_c_player")
     @app_commands.guild_only()
@@ -672,6 +692,7 @@ class SquadQueue(commands.Cog):
         players[0].confirmed = True
         squad = Team(players)
         mogi.teams.append(squad)
+        await self.maybe_ping_tags(mogi)
         format_str = f"__**{mogi.format}**__ " if mogi.format else ""
         player_amount_str = f"{self.ongoing_event.players_per_room} player " if common.SERVER is common.Server.MKWorld else ""
         msg = f"{discord.utils.escape_markdown(players[0].lounge_name)} has been added by staff with MMR {mmr or starting_player_mmr} to the {player_amount_str}{format_str}queue closing at {discord.utils.format_dt(mogi.start_time)}, `[{mogi.count_registered()} players]`"

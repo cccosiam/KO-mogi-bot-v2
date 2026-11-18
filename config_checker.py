@@ -58,6 +58,14 @@ STRONGLY_REQUIRED_FIELDS = [
 
 
 def check(config: dict):
+    if "QUEUE_TAG_PING_THRESHOLDS" in config:
+        thresholds = config["QUEUE_TAG_PING_THRESHOLDS"]
+        if not isinstance(thresholds, list) or any(
+                type(threshold) is not int or threshold < 1
+                for threshold in thresholds):
+            raise ValueError(
+                "QUEUE_TAG_PING_THRESHOLDS must be a list of positive integers.")
+
     for required_field_name, required_field_type in STRONGLY_REQUIRED_FIELDS:
         check_list_items = required_field_name.endswith(".list_items")
         if check_list_items:
